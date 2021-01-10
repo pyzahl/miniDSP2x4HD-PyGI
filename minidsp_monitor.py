@@ -847,19 +847,29 @@ def create_control(_button):
                                 mdsp.setMute(False)
                                 
                 mute.connect("toggled", on_mute)
-
-                volumescale = Gtk.HScale( adjustment=Gtk.Adjustment(value=mdsp.getVolume(), lower=-120, upper=12, step_increment=1, page_increment=3, page_size=0))
+                
+                adj=Gtk.Adjustment(value=mdsp.getVolume(), lower=-127.5, upper=0, step_increment=1, page_increment=3, page_size=0)
+                volumescale = Gtk.HScale( adjustment=adj)
                 volumescale.set_size_request(150, 40)
                 volumescale.set_digits(1)
                 volumescale.set_draw_value(True)
                 grid.attach (volumescale, 2, 5, 10, 1)
+                def volume_update(aj):
+                        # print("V: {:f}".format(aj.get_value()))
+                        mdsp.setVolume (aj.get_value())
+                adj.connect("value-changed", volume_update)
 
                 grid.attach (Gtk.Label(label="Gain:"), 1, 6, 1, 1)
-                gainscale = Gtk.HScale( adjustment=Gtk.Adjustment(value=0, lower=-120, upper=12, step_increment=1, page_increment=3, page_size=0))
+                adj=Gtk.Adjustment(value=0, lower=-127.5, upper=0, step_increment=1, page_increment=3, page_size=0)
+                gainscale = Gtk.HScale( adjustment=adj)
                 gainscale.set_size_request(150, 40)
                 gainscale.set_digits(1)
                 gainscale.set_draw_value(True)
                 grid.attach (gainscale, 2, 6, 10, 1)
+                def gain_update(aj):
+                        # print("G: {:f}".format(aj.get_value()))
+                        mdsp.setGain (aj.get_value())
+                adj.connect("value-changed", volume_update)
 
                 grid.show_all()
         wins[name].show()
